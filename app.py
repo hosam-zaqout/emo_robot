@@ -1,16 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask
+import asyncio
+import websockets
 
 app = Flask(__name__)
 
+ASSEMBLY_WS = "wss://streaming.assemblyai.com/v3/ws?sample_rate=16000&speech_model=u3-rt-pro"
+
 @app.route("/")
 def home():
-    return "Server is running!"
+    return "Realtime server running"
 
-@app.route("/audio", methods=["POST"])
-def audio():
-    data = request.json
-    print("Received:", data)
-    return jsonify({"status": "ok"})
-
-if __name__ == "__main__":
-    app.run()
+# (لاحقاً بنضيف WebSocket bridge هنا)
