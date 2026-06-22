@@ -10,8 +10,10 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 ASSEMBLYAI_API_KEY = os.environ.get("ASSEMBLYAI_API_KEY")
-AAI_TOKEN_URL      = "https://api.assemblyai.com/v2/realtime/token"
-TOKEN_EXPIRES_IN   = 480  # seconds (max allowed by AssemblyAI)
+
+# v2 real-time token endpoint — the only stable token API AssemblyAI provides
+AAI_TOKEN_URL    = "https://api.assemblyai.com/v2/realtime/token"
+TOKEN_EXPIRES_IN = 480  # seconds
 
 
 @app.route("/token", methods=["GET"])
@@ -26,9 +28,9 @@ def get_token():
     try:
         resp = requests.post(
             AAI_TOKEN_URL,
-            json={"expires_in": TOKEN_EXPIRES_IN},   # body, not query param
+            json={"expires_in": TOKEN_EXPIRES_IN},
             headers={
-                "Authorization": ASSEMBLYAI_API_KEY,  # no "Bearer" prefix for AssemblyAI
+                "Authorization": ASSEMBLYAI_API_KEY,   # AssemblyAI uses raw key, no "Bearer"
                 "Content-Type": "application/json",
             },
             timeout=10,
@@ -56,7 +58,8 @@ def get_token():
 @app.route("/health", methods=["GET"])
 def health():
     """Simple health check for Render."""
-    return jsonify({"status": "ok"}), 200
+    key_set = bool(ASSEMBLYAI_API_KEY)
+    return jsonify({"status": "ok", "api_key_set": key_set}), 200
 
 
 if __name__ == "__main__":
