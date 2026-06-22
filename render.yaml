@@ -5,5 +5,5 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
-      - key: ASSEMBLYAI_API_KEY
+      - key: 4669cb47ef464621a16805cd6d9dbf5c
         sync: false   # you set this manually in Render dashboard
